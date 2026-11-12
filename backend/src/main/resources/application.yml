@@ -3,8 +3,8 @@ server:
 spring:
   datasource:
     url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/liftmanager}
-    username: postgres
-    password: change-this-local-password
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:change-this-local-password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
