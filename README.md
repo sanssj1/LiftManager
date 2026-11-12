@@ -97,6 +97,19 @@ mvn test
 
 El conjunto inicial de pruebas unitarias de `SchedulingRules` cubre intervalos de agenda, intervalos contiguos, límites de contrato y fechas faltantes. Ver `docs/TESTING.md` y `docs/TEST_CASES.md` para el estado y la matriz manual.
 
+## Publicar en GitHub
+
+1. Creá un repositorio vacío y público llamado `LiftManager` en GitHub (sin README ni archivos iniciales).
+2. Desde esta carpeta ejecutá:
+
+```bash
+git remote add origin https://github.com/TU_USUARIO/LiftManager.git
+git branch -M main
+git push -u origin main
+```
+
+3. Abrí el repositorio en GitHub y comprobá que se vean `README.md`, `AGENTS.md`, `docs/`, `backend/` y `frontend/`. Copiá la URL pública para el campus.
+
 ## Despliegue
 
 - Frontend: Netlify, publicar la carpeta `frontend/`.

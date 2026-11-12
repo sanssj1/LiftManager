@@ -26,6 +26,7 @@ Los estados `[x]` indican que el código/documentación correspondiente está cr
 - [x] T21 — Escribir instrucciones de despliegue.
 - [x] T22 — Crear README, `.gitignore` y ejemplo de variables sin credenciales reales.
 - [x] T23 — Agregar GitHub Actions CI y registrar la planificación.
+- [x] T31 — Endurecer seguridad: deshabilitar formulario y HTTP Basic, dejando JWT como único acceso.
 
 ## Verificaciones y publicación pendientes — bloqueantes para la entrega
 - [ ] T24 — Ejecutar `mvn test` en un equipo con Maven 3.9+; corregir y repetir hasta que pase.
