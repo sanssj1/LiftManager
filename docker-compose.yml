@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: liftmanager-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: liftmanager
+      POSTGRES_USER: ${SPRING_DATASOURCE_USERNAME:-postgres}
+      POSTGRES_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-change-this-local-password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - liftmanager_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d liftmanager"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  liftmanager_pgdata:
