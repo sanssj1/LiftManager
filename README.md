@@ -51,7 +51,7 @@ En una terminal, definí estas variables. Para Windows PowerShell:
 ```powershell
 $env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/liftmanager"
 $env:SPRING_DATASOURCE_USERNAME="postgres"
-$env:SPRING_DATASOURCE_PASSWORD="tu_clave_local"
+$env:SPRING_DATASOURCE_PASSWORD="change-this-local-password"
 $env:APP_JWT_SECRET="una-clave-local-de-al-menos-32-caracteres"
 $env:APP_BOOTSTRAP_ADMIN_EMAIL="admin@liftmanager.local"
 $env:APP_BOOTSTRAP_ADMIN_PASSWORD="una-clave-local-segura-de-12+"
