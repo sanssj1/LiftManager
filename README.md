@@ -1,76 +1,133 @@
+
 # LiftManager
 
-**LiftManager** es una aplicación web para administrar operaciones de una empresa ficticia de mantenimiento de ascensores. Permite registrar edificios y equipos, asignar técnicos, gestionar contratos, programar visitas y seguir reclamos.
+**LiftManager** es una aplicación web para administrar las operaciones de una empresa ficticia de mantenimiento de ascensores. Permite registrar edificios y equipos, asignar técnicos, gestionar contratos, programar visitas de mantenimiento y realizar el seguimiento de reclamos.
 
-> Estado de esta entrega: código fuente y documentación preparados. El despliegue público todavía requiere configurar cuentas/variables propias en Neon, Render, Netlify y GitHub. No se incluyen credenciales ni usuarios/contraseñas predefinidos.
+## Enlaces del proyecto
+
+- **Aplicación web:** https://liftmanager1234.netlify.app
+- **Backend / API:** https://liftmanager.onrender.com
+- **Estado de la API:** https://liftmanager.onrender.com/api/health
+- **Repositorio GitHub:** https://github.com/sanssj1/LiftManager
+- **Base de datos:** PostgreSQL alojada en Neon.
+- **Consola de Neon:** https://console.neon.tech/
+
+> La aplicación y el backend están publicados en internet. La base de datos se administra desde Neon y no tiene una interfaz pública de acceso directo.
 
 ## Funcionalidades
 
-- Inicio de sesión con token JWT y contraseñas BCrypt.
-- Roles: `ADMIN`, `TECHNICIAN` y `BUILDING_MANAGER`.
+- Inicio de sesión con autenticación JWT y contraseñas protegidas mediante BCrypt.
+- Gestión de roles: `ADMIN`, `TECHNICIAN` y `BUILDING_MANAGER`.
 - Gestión de edificios, ascensores, usuarios y contratos.
-- Programación de mantenimientos, con validación de vigencia contractual y solapamientos de agenda.
-- Inicio y cierre de visitas por el técnico asignado; el cierre exige descripción del trabajo realizado.
-- Registro y seguimiento de reclamos, asignación a técnicos y transiciones controladas.
-- Una incidencia crítica cambia el ascensor a `OUT_OF_SERVICE`; el administrador puede actualizar su estado cuando se verifica la condición real del equipo.
-- Persistencia PostgreSQL.
+- Programación de mantenimientos.
+- Validación de vigencia contractual y solapamientos de agenda.
+- Inicio y cierre de visitas por parte del técnico asignado.
+- Registro obligatorio de la descripción del trabajo realizado al cerrar una visita.
+- Registro, asignación y seguimiento de reclamos.
+- Transiciones de estado controladas para los reclamos.
+- Una incidencia crítica cambia el ascensor a `OUT_OF_SERVICE`.
+- El administrador puede actualizar el estado del ascensor cuando se verifica su condición real.
+- Persistencia de información mediante PostgreSQL.
 
-## Arquitectura
+## Arquitectura y tecnologías
 
-| Componente | Tecnología | Carpeta |
-|---|---|---|
-| Frontend | HTML, CSS y JavaScript | `frontend/` |
-| API | Java 21, Spring Boot 3.4.5 | `backend/` |
-| Datos | PostgreSQL | Neon o local |
-| Autenticación | JWT + BCrypt | Backend |
-| Tests | JUnit 5 | `backend/src/test/` |
+| Componente | Tecnología |
+|---|---|
+| Frontend | HTML, CSS y JavaScript |
+| Backend | Java 21 y Spring Boot 3.4.5 |
+| Base de datos | PostgreSQL |
+| Hosting del frontend | Netlify |
+| Hosting del backend | Render |
+| Base de datos en la nube | Neon |
+| Autenticación | JWT y BCrypt |
+| Pruebas | JUnit 5 |
+| Control de versiones | Git y GitHub |
 
-## Requisitos
+## Estructura del proyecto
+
+```text
+LiftManager/
+├── backend/
+│   ├── src/
+│   │   ├── main/
+│   │   └── test/
+│   ├── Dockerfile
+│   └── pom.xml
+├── frontend/
+│   ├── assets/
+│   ├── config.js
+│   └── index.html
+├── docs/
+│   ├── PROJECT.md
+│   ├── SPEC.md
+│   ├── PLAN.md
+│   ├── TESTING.md
+│   ├── TEST_CASES.md
+│   ├── ARCHITECTURE.md
+│   ├── USER_GUIDE.md
+│   └── DEPLOYMENT.md
+├── AGENTS.md
+├── README.md
+└── netlify.toml
+```
+
+## Requisitos para ejecutar localmente
 
 - Java 21.
 - Maven 3.9 o superior.
-- Node.js no es obligatorio; se usa Python o cualquier servidor estático para servir el frontend.
-- PostgreSQL 15 o superior, o una base PostgreSQL de Neon.
+- PostgreSQL 15 o superior, o una base de datos Neon.
+- Python o cualquier servidor HTTP estático para servir el frontend.
 
-## Ejecutar localmente
+## Ejecución local
 
-### 1. Crear la base de datos
+### 1. Configurar la base de datos
 
-Podés iniciar PostgreSQL con Docker:
+Se puede iniciar PostgreSQL mediante Docker:
 
 ```bash
 docker compose up -d db
 ```
 
-O crear una base local llamada `liftmanager` y configurar `SPRING_DATASOURCE_URL`, `SPRING_DATASOURCE_USERNAME` y `SPRING_DATASOURCE_PASSWORD`.
+También se puede utilizar una instancia local de PostgreSQL o una base de datos de Neon.
 
-### 2. Configurar variables del backend
+### 2. Configurar las variables de entorno
 
-En una terminal, definí estas variables. Para Windows PowerShell:
+En Windows PowerShell:
 
 ```powershell
 $env:SPRING_DATASOURCE_URL="jdbc:postgresql://localhost:5432/liftmanager"
 $env:SPRING_DATASOURCE_USERNAME="postgres"
-$env:SPRING_DATASOURCE_PASSWORD="change-this-local-password"
+$env:SPRING_DATASOURCE_PASSWORD="tu-clave-local"
 $env:APP_JWT_SECRET="una-clave-local-de-al-menos-32-caracteres"
 $env:APP_BOOTSTRAP_ADMIN_EMAIL="admin@liftmanager.local"
 $env:APP_BOOTSTRAP_ADMIN_PASSWORD="una-clave-local-segura-de-12+"
 $env:CORS_ALLOWED_ORIGINS="http://localhost:5500,http://127.0.0.1:5500"
 ```
 
-Linux/macOS usa `export VARIABLE="valor"`. No guardes claves reales en archivos versionados.
+No guardar credenciales reales en archivos versionados ni compartirlas públicamente.
 
-### 3. Iniciar backend
+### 3. Iniciar el backend
+
+Desde la carpeta del proyecto:
 
 ```bash
 cd backend
 mvn spring-boot:run
 ```
 
-API: `http://localhost:8080`  
-Health check: `http://localhost:8080/api/health`
+La API estará disponible en:
 
-### 4. Iniciar frontend
+```text
+http://localhost:8080
+```
+
+Health check:
+
+```text
+http://localhost:8080/api/health
+```
+
+### 4. Iniciar el frontend
 
 En otra terminal:
 
@@ -79,61 +136,94 @@ cd frontend
 python -m http.server 5500
 ```
 
-Abrí `http://localhost:5500`. La URL de API está en `frontend/config.js`; en local apunta a `http://localhost:8080`.
+Abrir en el navegador:
 
-### 5. Ingreso inicial
+```text
+http://localhost:5500
+```
 
-Al iniciar el backend, se crea un administrador solo cuando están definidas `APP_BOOTSTRAP_ADMIN_EMAIL` y `APP_BOOTSTRAP_ADMIN_PASSWORD` y el email todavía no existe. La contraseña debe tener al menos 12 caracteres. El sistema almacena un hash BCrypt, nunca la contraseña original.
+La URL del backend se configura desde `frontend/config.js`.
 
-Después de ingresar, el administrador crea técnicos y administradores de edificios desde **Usuarios**.
+### 5. Crear el administrador inicial
+
+El administrador inicial se crea al iniciar el backend cuando están definidas las variables:
+
+- `APP_BOOTSTRAP_ADMIN_EMAIL`
+- `APP_BOOTSTRAP_ADMIN_PASSWORD`
+
+La contraseña debe tener al menos 12 caracteres. El sistema almacena su hash BCrypt, no la contraseña original.
+
+Luego, el administrador puede crear técnicos y administradores de edificios desde la sección **Usuarios**.
 
 ## Pruebas
 
-Desde `backend/`:
+Para ejecutar las pruebas automatizadas desde la carpeta `backend/`:
 
 ```bash
 mvn test
 ```
 
-El conjunto inicial de pruebas unitarias de `SchedulingRules` cubre intervalos de agenda, intervalos contiguos, límites de contrato y fechas faltantes. Ver `docs/TESTING.md` y `docs/TEST_CASES.md` para el estado y la matriz manual.
+El proyecto cuenta con pruebas unitarias de las reglas de programación de visitas (`SchedulingRules`), que contemplan:
 
-## Publicar en GitHub
+- Intervalos de agenda.
+- Intervalos contiguos.
+- Límites de vigencia contractual.
+- Fechas faltantes.
 
-1. Creá un repositorio vacío y público llamado `LiftManager` en GitHub (sin README ni archivos iniciales).
-2. Desde esta carpeta ejecutá:
+También se realiza una validación sintáctica del JavaScript del frontend.
 
-```bash
-git remote add origin https://github.com/TU_USUARIO/LiftManager.git
-git branch -M main
-git push -u origin main
-```
-
-3. Abrí el repositorio en GitHub y comprobá que se vean `README.md`, `AGENTS.md`, `docs/`, `backend/` y `frontend/`. Copiá la URL pública para el campus.
+Consultar `docs/TESTING.md` y `docs/TEST_CASES.md` para obtener más información sobre las pruebas.
 
 ## Despliegue
 
-- Frontend: Netlify, publicar la carpeta `frontend/`.
-- Backend: Render, construir con `backend/Dockerfile`.
-- Base de datos: Neon PostgreSQL.
+El proyecto utiliza los siguientes servicios:
 
-Seguí la guía completa en [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md). La app no está publicada todavía: el propietario del proyecto tiene que crear las cuentas, cargar las variables y confirmar el funcionamiento con URLs reales.
+| Servicio | Plataforma | Función |
+|---|---|---|
+| Frontend | Netlify | Publicación de la aplicación web |
+| Backend | Render | Ejecución de la API Spring Boot |
+| Base de datos | Neon | Almacenamiento PostgreSQL |
+| Repositorio | GitHub | Código fuente y documentación |
 
-## Documentación de entrega
+### Variables de entorno del backend
 
-- [`docs/PROJECT.md`](docs/PROJECT.md): descripción y alcance.
-- [`docs/SPEC.md`](docs/SPEC.md): reglas de negocio numeradas y requisitos.
-- [`AGENTS.md`](AGENTS.md): reglas para agentes de IA.
-- [`docs/PLAN.md`](docs/PLAN.md): tareas y estado.
-- [`docs/TESTING.md`](docs/TESTING.md): informe de pruebas.
-- [`docs/TEST_CASES.md`](docs/TEST_CASES.md): casos de prueba funcionales.
-- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md): arquitectura y decisiones.
-- [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md): guía de uso.
-- [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md): publicación y configuración.
+Para el despliegue se utilizan las siguientes variables:
+
+- `SPRING_DATASOURCE_URL`
+- `SPRING_DATASOURCE_USERNAME`
+- `SPRING_DATASOURCE_PASSWORD`
+- `APP_JWT_SECRET`
+- `CORS_ALLOWED_ORIGINS`
+- `APP_BOOTSTRAP_ADMIN_EMAIL` (si se necesita crear el administrador inicial)
+- `APP_BOOTSTRAP_ADMIN_PASSWORD` (si se necesita crear el administrador inicial)
+
+Las credenciales deben configurarse desde el panel de Render y nunca subirse al repositorio.
+
+Consultar `docs/DEPLOYMENT.md` para conocer los detalles de configuración.
+
+## Documentación
+
+| Archivo | Descripción |
+|---|---|
+| `docs/PROJECT.md` | Descripción y alcance del proyecto |
+| `docs/SPEC.md` | Reglas de negocio y requisitos numerados |
+| `AGENTS.md` | Instrucciones para agentes de IA |
+| `docs/PLAN.md` | Plan de trabajo y estado de las tareas |
+| `docs/TESTING.md` | Informe de pruebas |
+| `docs/TEST_CASES.md` | Casos de prueba funcionales |
+| `docs/ARCHITECTURE.md` | Arquitectura y decisiones técnicas |
+| `docs/USER_GUIDE.md` | Guía de uso de la aplicación |
+| `docs/DEPLOYMENT.md` | Configuración y publicación |
 
 ## Seguridad y limitaciones conocidas
 
-- Nunca subas `.env`, claves JWT, credenciales de Neon ni contraseñas al repositorio.
-- El primer administrador se crea desde variables de entorno; no existe contraseña universal.
-- `ddl-auto: update` se usa para facilitar la primera instalación académica. Para una operación productiva, migrar a Flyway y `ddl-auto: validate`.
-- El control de solapamientos está en la capa de servicio. Para concurrencia de alto volumen, conviene agregar una restricción/estrategia transaccional específica en PostgreSQL.
-- No se implementan pagos, facturación, notificaciones por WhatsApp, firma digital ni aplicación móvil en esta primera versión.
+- No subir archivos `.env`, contraseñas, claves JWT ni credenciales de Neon al repositorio.
+- No existe una contraseña universal o un usuario administrador predefinido.
+- El primer administrador se crea mediante variables de entorno.
+- Se utiliza `ddl-auto: update` para facilitar la instalación académica inicial. Para un entorno productivo se recomienda implementar migraciones con Flyway y utilizar `ddl-auto: validate`.
+- La validación de solapamientos se realiza en la capa de servicio. Para escenarios de concurrencia elevada se recomienda incorporar una estrategia transaccional específica en PostgreSQL.
+- Esta primera versión no implementa pagos, facturación, notificaciones por WhatsApp, firma digital ni aplicación móvil.
+
+## Autoría
+
+Proyecto desarrollado como trabajo final de **Generación T**, con el objetivo de aplicar conocimientos de desarrollo web, programación backend, bases de datos, autenticación, pruebas y despliegue de aplicaciones.
