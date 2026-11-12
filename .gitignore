@@ -1,0 +1,23 @@
+# Secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Java / Maven
+backend/target/
+*.class
+
+# IDEs
+.idea/
+.vscode/
+*.iml
+
+# OS / logs
+.DS_Store
+Thumbs.db
+*.log
+
+# Local database volumes
+.pgdata/
